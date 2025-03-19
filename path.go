@@ -538,3 +538,13 @@ func ListPathsInNode(node *yamlv3.Node) ([]Path, error) {
 	})
 	return paths, nil
 }
+
+// AppendPath combines 2 path objects together
+func AppendPath(parentPath, childPath Path) Path {
+	newPath := parentPath
+
+	newPath.DocumentIdx = childPath.DocumentIdx
+	newPath.PathElements = append(newPath.PathElements, childPath.PathElements...)
+
+	return newPath
+}
