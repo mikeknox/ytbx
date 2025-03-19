@@ -45,10 +45,12 @@ const (
 // Path points to a section in a data structure by using names to identify the
 // location.
 // Example:
-//   ---
-//   sizing:
-//     api:
-//       count: 2
+//
+//	---
+//	sizing:
+//	  api:
+//	    count: 2
+//
 // For example, `sizing.api.count` points to the key `sizing` of the root
 // element and in there to the key `api` and so on and so forth.
 type Path struct {
@@ -523,4 +525,16 @@ func (element PathElement) isComplexListElement() bool {
 func (element PathElement) isSimpleListElement() bool {
 	return len(element.Key) == 0 &&
 		len(element.Name) == 0
+}
+
+// ListPathsInNode returns all paths in the node using the provided choice of
+// path style.
+func ListPathsInNode(node *yamlv3.Node) ([]Path, error) {
+	paths := []Path{}
+	root := Path{DocumentIdx: 0}
+
+	traverseTree(root, nil, node, func(path Path, _ *yamlv3.Node, _ *yamlv3.Node) {
+		paths = append(paths, path)
+	})
+	return paths, nil
 }
